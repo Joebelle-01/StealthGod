@@ -3,6 +3,7 @@ const path = require('path')
 const { spawn } = require('child_process')
 const WebSocket = require('ws')
 const fs = require('fs')
+const crypto = require('crypto')
 
 // Prevent GPU crash on transparent windows with hybrid GPU setups (NVIDIA + AMD)
 app.disableHardwareAcceleration()
@@ -99,9 +100,14 @@ function createOverlay() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      sandbox: true
     }
   })
+
+  // Prevent unexpected window creation and navigation
+  overlayWin.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  overlayWin.webContents.on('will-navigate', (e) => e.preventDefault())
 
   // ★ THE KEY: makes window invisible to ALL screen capture at OS level
   overlayWin.setContentProtection(true)
@@ -131,14 +137,18 @@ function openSettings() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: false
+      nodeIntegration: false,
+      sandbox: true
     }
   })
+  settingsWin.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  settingsWin.webContents.on('will-navigate', (e) => e.preventDefault())
   settingsWin.setMenuBarVisibility(false)
   settingsWin.loadFile(path.join(__dirname, 'settings.html'))
 }
 
 // ─── Audio Bridge ────────────────────────────────────────────────────────────
+const BRIDGE_SECRET = crypto.randomBytes(24).toString('hex')
 let audioBridgeProcess = null
 let wsClient = null
 let isListening = false
@@ -151,7 +161,7 @@ function startAudioBridge() {
   audioBridgeProcess = spawn('python', [bridgeScript], {
     windowsHide: true,
     stdio: ['ignore', 'pipe', 'pipe'],
-    env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
+    env: { ...process.env, PYTHONIOENCODING: 'utf-8', STEALTH_BRIDGE_TOKEN: BRIDGE_SECRET }
   })
 
   audioBridgeProcess.stdout.on('data', d => console.log('[bridge]', d.toString().trim()))
@@ -163,7 +173,11 @@ function startAudioBridge() {
 
 function connectToAudioBridge() {
   try {
-    wsClient = new WebSocket('ws://127.0.0.1:8765')
+    wsClient = new WebSocket('ws://127.0.0.1:8765', {
+      headers: {
+        'x-bridge-token': BRIDGE_SECRET
+      }
+    })
 
     wsClient.on('open', () => {
       console.log('[audio] Connected to bridge')
@@ -285,7 +299,15 @@ ipcMain.handle('save-config', (_, newCfg) => {
   return { ok: true }
 })
 
-ipcMain.handle('open-url', (_, url) => shell.openExternal(url))
+ipcMain.handle('open-url', (_, url) => {
+  if (typeof url !== 'string') return
+  try {
+    const parsed = new URL(url)
+    if (parsed.protocol === 'https:' || parsed.protocol === 'http:') {
+      return shell.openExternal(url)
+    }
+  } catch {}
+})
 
 ipcMain.handle('toggle-listen', () => {
   isListening = !isListening

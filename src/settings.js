@@ -2,6 +2,7 @@
 'use strict'
 
 const groqApiKeyEl     = document.getElementById('groqApiKey')
+const apiKeyEl         = document.getElementById('apiKey')
 const candidateNameEl  = document.getElementById('candidateName')
 const resumeContextEl  = document.getElementById('resumeContext')
 const jobDescriptionEl = document.getElementById('jobDescription')

@@ -1,4 +1,7 @@
 import asyncio
+import os
+import http
+import hmac
 import struct
 import pyaudiowpatch as pa
 import websockets
@@ -7,6 +10,7 @@ HOST = "127.0.0.1"
 PORT = 8765
 TARGET_RATE = 16000
 CHUNK_MS = 100
+EXPECTED_TOKEN = os.environ.get("STEALTH_BRIDGE_TOKEN")
 
 def resample_and_mono(raw_bytes, from_rate, channels):
     samples = struct.unpack(f"<{len(raw_bytes)//2}h", raw_bytes)
@@ -90,9 +94,18 @@ async def handler(websocket):
         p.terminate()
         print("[bridge] Cleaned up audio stream", flush=True)
 
+def check_auth(connection, request):
+    if not EXPECTED_TOKEN:
+        return None
+    token = request.headers.get("x-bridge-token")
+    if not token or not hmac.compare_digest(token, EXPECTED_TOKEN):
+        print("[bridge] Unauthorized connection attempt rejected", flush=True)
+        return connection.respond(http.HTTPStatus.UNAUTHORIZED, "Unauthorized\n")
+    return None
+
 async def main():
     print(f"[bridge] Server running on ws://{HOST}:{PORT}", flush=True)
-    async with websockets.serve(handler, HOST, PORT):
+    async with websockets.serve(handler, HOST, PORT, process_request=check_auth):
         await asyncio.Future()
 
 if __name__ == "__main__":
