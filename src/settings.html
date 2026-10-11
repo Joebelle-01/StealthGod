@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'unsafe-inline'">
+  <title>StealthGod Settings</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f8fafc;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea,
+    select {
+      width: 100%;
+      background: #1e2330;
+      border: 1px solid #2d3748;
+      border-radius: 6px;
+      color: #e2e8f0;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #3b82f6;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.5;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #475569;
+      margin-top: 4px;
+    }
+
+    .hint a {
+      color: #3b82f6;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: #3b82f6;
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .range-val {
+      font-size: 12px;
+      color: #94a3b8;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    button {
+      padding: 9px 20px;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    button:hover { opacity: 0.85; }
+
+    #saveBtn {
+      background: #3b82f6;
+      color: white;
+      flex: 1;
+    }
+
+    #cancelBtn {
+      background: #1e2330;
+      color: #94a3b8;
+      border: 1px solid #2d3748;
+    }
+
+    #toast {
+      display: none;
+      margin-top: 12px;
+      padding: 8px 12px;
+      background: #14532d;
+      border: 1px solid #22c55e;
+      border-radius: 6px;
+      color: #86efac;
+      font-size: 12px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid #1e2330;
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚙ StealthGod Settings</h1>
+  <p class="subtitle">Ctrl+Shift+S to open · Ctrl+Shift+H to hide overlay · Ctrl+Shift+C to clear</p>
+
+  <div class="section">
+    <label>⚡ Groq API Key (Recommended - Ultra Fast ~0.3s)</label>
+    <input type="password" id="groqApiKey" placeholder="gsk_..." autocomplete="off" />
+    <p class="hint">Free key at <a id="groqLink">console.groq.com</a> (Whisper Turbo + GPT-OSS 120B)</p>
+  </div>
+
+  <div class="section">
+    <label>Google Gemini API Key (Fallback)</label>
+    <input type="password" id="apiKey" placeholder="Paste your key here…" autocomplete="off" />
+    <p class="hint">Free key at <a id="apiLink">aistudio.google.com/app/apikey</a></p>
+  </div>
+
+  <div class="section">
+    <label>👤 Your Name / Nickname</label>
+    <input type="text" id="candidateName" placeholder="e.g. Alex (or your full name)" autocomplete="off" />
+    <p class="hint">Used when asked basic questions like "What is your name?" or "Who are you?".</p>
+  </div>
+
+  <div class="section">
+    <label>📄 Your Resume / Experience Context</label>
+    <textarea id="resumeContext" style="min-height: 100px;" placeholder="Paste your background, past work, key projects, accomplishments, and tech stack. This remains saved across interviews."></textarea>
+    <p class="hint">The AI will use your real achievements to prove you're qualified.</p>
+  </div>
+
+  <div class="section">
+    <label>🎯 Target Job Description (JD)</label>
+    <textarea id="jobDescription" style="min-height: 90px;" placeholder="Paste the job posting requirements, responsibilities, and preferred skills for the company interviewing you (e.g. Mercor, Micro1, Aligner)."></textarea>
+    <p class="hint">Update this whenever you interview for a different role or company.</p>
+  </div>
+
+  <hr>
+
+  <div class="section row">
+    <div>
+      <label>Overlay Position</label>
+      <select id="overlayPosition">
+        <option value="top-center" selected>Top Center (Webcam Level - Eye Focus) 🎯</option>
+        <option value="top">Top Full Width</option>
+        <option value="center">Screen Center (Float in Middle)</option>
+        <option value="bottom">Bottom of Screen</option>
+      </select>
+    </div>
+    <div>
+      <label>Overlay Width</label>
+      <select id="overlayWidth">
+        <option value="compact">Compact (620px - Natural Eye Focus) 👁️</option>
+        <option value="medium" selected>Medium (800px)</option>
+        <option value="wide">Wide (1050px)</option>
+        <option value="full">Full Screen Width</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section row">
+    <div>
+      <label>Overlay Height</label>
+      <select id="overlayHeight">
+        <option value="85">Compact (85px)</option>
+        <option value="115" selected>Normal (115px)</option>
+        <option value="150">Tall (150px)</option>
+        <option value="190">Extra Tall (190px)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="section row">
+    <div>
+      <label>Font Size</label>
+      <select id="fontSize">
+        <option value="12">Small (12px)</option>
+        <option value="14" selected>Normal (14px)</option>
+        <option value="16">Large (16px)</option>
+        <option value="18">X-Large (18px)</option>
+      </select>
+    </div>
+    <div>
+      <label>Background Opacity</label>
+      <div class="range-row" style="margin-top: 6px;">
+        <input type="range" id="opacity" min="0.5" max="0.97" step="0.01" value="0.86" />
+        <span class="range-val" id="opacityVal">86%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <label>Pause Detection / False Pause Timeout (seconds)</label>
+    <div class="range-row">
+      <input type="range" id="silenceTimeout" min="1.0" max="6.0" step="0.2" value="2.2" />
+      <span class="range-val" id="silenceTimeoutVal">2.2s</span>
+    </div>
+    <p class="hint">How long the interviewer stops talking before triggering the answer. Increase to 3.0s - 4.0s if they pause mid-sentence to think.</p>
+  </div>
+
+  <div class="section">
+    <label>Auto-Clear Delay</label>
+    <div class="range-row">
+      <input type="range" id="autoClearDelay" min="0" max="60" step="5" value="0" />
+      <span class="range-val" id="autoClearVal">Never (Manual)</span>
+    </div>
+    <p class="hint">Set to 0 / "Never" so answers stay on screen until the NEXT question or until you press Ctrl+Shift+C.</p>
+  </div>
+
+  <div class="btn-row">
+    <button id="cancelBtn">Cancel</button>
+    <button id="saveBtn">Save Settings</button>
+  </div>
+
+  <div id="toast">✓ Settings saved!</div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'unsafe-inline'">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: transparent;
+      overflow: hidden;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      -webkit-app-region: no-drag;
+      user-select: none;
+    }
+
+    #container {
+      width: 100vw;
+      height: 100vh;
+      background: rgba(8, 8, 12, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      padding: 6px 14px 4px;
+      gap: 2px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Status bar */
+    #statusBar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    #dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    #dot.thinking { background: #f59e0b; animation: pulse 0.8s ease-in-out infinite; }
+    #dot.paused   { background: #6b7280; }
+    #dot.error    { background: #ef4444; }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.3; }
+    }
+
+    #statusMsg {
+      font-size: 10px;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.03em;
+      flex: 1;
+    }
+
+    #hotkeys {
+      font-size: 9px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.02em;
+    }
+
+    /* Q&A area */
+    #qaArea {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-height: 0;
+    }
+
+    #questionLine {
+      font-size: 11px;
+      color: rgba(148,163,184,0.75);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex-shrink: 0;
+      min-height: 14px;
+    }
+
+    #questionLine span {
+      color: rgba(99,179,237,0.7);
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    #answerLine {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.93);
+      line-height: 1.45;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      flex: 1;
+    }
+
+    #answerLine.streaming::after {
+      content: '▋';
+      animation: blink 0.7s step-end infinite;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85em;
+    }
+
+    @keyframes blink {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0; }
+    }
+
+    #errorMsg {
+      font-size: 11px;
+      color: #f87171;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="statusBar">
+      <div id="dot"></div>
+      <div id="statusMsg">Connecting...</div>
+      <div id="hotkeys">H=hide · C=clear · S=settings · R=pause</div>
+    </div>
+    <div id="qaArea">
+      <div id="errorMsg"></div>
+      <div id="questionLine"><span>Q</span><em id="qText"></em></div>
+      <div id="answerLine" id="aText"></div>
+    </div>
+  </div>
+  <script src="overlay.js"></script>
+</body>
+</html>
