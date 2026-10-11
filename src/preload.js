@@ -13,5 +13,6 @@ contextBridge.exposeInMainWorld('stealthAPI', {
   onAnswerDone: (cb) => ipcRenderer.on('answer-done', () => cb()),
   onClear: (cb) => ipcRenderer.on('clear', () => cb()),
   onError: (cb) => ipcRenderer.on('error', (_, msg) => cb(msg)),
-  onConfigUpdated: (cb) => ipcRenderer.on('config-updated', (_, cfg) => cb(cfg))
+  onConfigUpdated: (cb) => ipcRenderer.on('config-updated', (_, cfg) => cb(cfg)),
+  onScroll: (cb) => ipcRenderer.on('scroll', (_, dir) => cb(dir))
 })

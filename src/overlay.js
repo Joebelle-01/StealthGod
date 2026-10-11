@@ -56,7 +56,16 @@ stealthAPI.onAnswerStart(() => {
 stealthAPI.onAnswerToken((token) => {
   currentAnswer += token
   answerEl.textContent = currentAnswer
+  // Automatically scroll to reveal newly generated text while streaming
+  answerEl.scrollTop = answerEl.scrollHeight
 })
+
+// Listen for scroll IPC commands (e.g. from hotkeys)
+if (stealthAPI.onScroll) {
+  stealthAPI.onScroll((dir) => {
+    answerEl.scrollTop += dir * 40
+  })
+}
 
 // ── Answer done ───────────────────────────────────────────────────────────────
 stealthAPI.onAnswerDone(() => {

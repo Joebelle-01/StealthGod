@@ -353,6 +353,14 @@ app.whenReady().then(() => {
     })
   })
 
+  globalShortcut.register('CommandOrControl+Shift+Down', () => {
+    overlayWin?.webContents.send('scroll', 1)
+  })
+
+  globalShortcut.register('CommandOrControl+Shift+Up', () => {
+    overlayWin?.webContents.send('scroll', -1)
+  })
+
   globalShortcut.register('CommandOrControl+Shift+Q', () => {
     app.quit()
   })

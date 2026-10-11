@@ -94,13 +94,28 @@
 
     #answerLine {
       font-size: 13px;
-      color: rgba(255, 255, 255, 0.93);
+      color: rgba(255, 255, 255, 0.94);
       line-height: 1.45;
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
+      overflow-y: auto;
+      overflow-x: hidden;
       flex: 1;
+      padding-right: 4px;
+      scroll-behavior: smooth;
+    }
+
+    /* Subtle custom scrollbar */
+    #answerLine::-webkit-scrollbar {
+      width: 4px;
+    }
+    #answerLine::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #answerLine::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    #answerLine::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.4);
     }
 
     #answerLine.streaming::after {
@@ -127,7 +142,7 @@
     <div id="statusBar">
       <div id="dot"></div>
       <div id="statusMsg">Connecting...</div>
-      <div id="hotkeys">H=hide · C=clear · S=settings · R=pause</div>
+      <div id="hotkeys">↑/↓=scroll · H=hide · C=clear · S=settings</div>
     </div>
     <div id="qaArea">
       <div id="errorMsg"></div>
