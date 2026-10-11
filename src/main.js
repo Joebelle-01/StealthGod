@@ -215,8 +215,8 @@ function connectToAudioBridge() {
       } else if (speechDetected) {
         // Collect a little trailing silence to capture word endings smoothly
         audioBuffer.push(data)
-        // Hard cutoff after 25s so a long speech triggers processing anyway
-        if (Date.now() - speechStartTime > 25000) {
+        // Generous cutoff after 90s so even long, detailed scenario questions are fully captured
+        if (Date.now() - speechStartTime > 90000) {
           speechDetected = false
           clearTimeout(silenceTimer)
           processAudioBuffer()
