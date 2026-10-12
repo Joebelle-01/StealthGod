@@ -24,7 +24,7 @@ start.bat
 
 ## First Time Setup
 
-1. **Open Settings**: Press **`Ctrl` + `Shift` + `S`** (or wait for it to open automatically on first run)
+1. **Open Settings**: Press **`Ctrl + Shift + S`** (or **`Ctrl + Alt + S`**)
 2. **Groq API Key (Recommended)**: Get a free key at [console.groq.com](https://console.groq.com) and paste it into the Groq field for ~0.3s response time.
 3. **Your Name**: Enter your name for natural answers to "What is your name?".
 4. **Resume**: Paste your experience summary.
@@ -35,15 +35,17 @@ start.bat
 
 ## Global Hotkeys
 
-| Hotkey | Action |
-|---|---|
-| `Ctrl+Shift+S` | **Open Settings** |
-| `Ctrl+Shift+H` | **Emergency Hide / Show** overlay |
-| `Ctrl+Shift+C` | **Clear answer** immediately |
-| `Ctrl+Shift+Down (↓)` | **Scroll down** long answers |
-| `Ctrl+Shift+Up (↑)` | **Scroll up** |
-| `Ctrl+Shift+R` | Pause / Resume audio capture |
-| `Ctrl+Shift+Q` | Quit app completely |
+| Hotkey | Alternative Hotkey | Action |
+|---|---|---|
+| **`Ctrl + Shift + S`** | **`Ctrl + Alt + S`** | **Open Settings** |
+| **`Ctrl + Shift + H`** | `Ctrl + Alt + H` | **Emergency Hide / Show** overlay |
+| **`Ctrl + Shift + C`** | `Ctrl + Alt + C` | **Clear answer** immediately |
+| **`Ctrl + Shift + Down (↓)`** | — | **Scroll down** long answers |
+| **`Ctrl + Shift + Up (↑)`** | — | **Scroll up** |
+| **`Ctrl + Shift + R`** | — | Pause / Resume audio capture |
+| **`Ctrl + Shift + Q`** | — | Quit app completely |
+
+> 💡 **Troubleshooting Hotkeys:** If `Ctrl + Shift + S` does not respond on your keyboard, it is likely being intercepted by another running background program (like Windows Snipping Tool, Microsoft Edge, or graphics software). Use **`Ctrl + Alt + S`** instead, which works as a built-in alternative.
 
 ---
 

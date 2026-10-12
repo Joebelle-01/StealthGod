@@ -347,9 +347,9 @@ app.whenReady().then(() => {
     overlayWin?.webContents.send('clear')
   })
 
-  globalShortcut.register('CommandOrControl+Shift+S', () => {
-    openSettings()
-  })
+  // Settings shortcuts (support both Ctrl+Shift+S and Ctrl+Alt+S)
+  globalShortcut.register('CommandOrControl+Shift+S', openSettings)
+  globalShortcut.register('CommandOrControl+Alt+S', openSettings)
 
   globalShortcut.register('CommandOrControl+Shift+R', () => {
     isListening = !isListening
