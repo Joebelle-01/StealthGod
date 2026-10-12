@@ -125,15 +125,17 @@ function createOverlay() {
 
 function openSettings() {
   if (settingsWin && !settingsWin.isDestroyed()) {
+    settingsWin.show()
     settingsWin.focus()
     return
   }
   settingsWin = new BrowserWindow({
-    width: 540,
-    height: 600,
+    width: 580,
+    height: 720,
     title: 'StealthGod Settings',
-    resizable: false,
+    resizable: true,
     skipTaskbar: false,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -145,6 +147,10 @@ function openSettings() {
   settingsWin.webContents.on('will-navigate', (e) => e.preventDefault())
   settingsWin.setMenuBarVisibility(false)
   settingsWin.loadFile(path.join(__dirname, 'settings.html'))
+  settingsWin.once('ready-to-show', () => {
+    settingsWin.show()
+    settingsWin.focus()
+  })
 }
 
 // ─── Audio Bridge ────────────────────────────────────────────────────────────
@@ -364,6 +370,11 @@ app.whenReady().then(() => {
   globalShortcut.register('CommandOrControl+Shift+Q', () => {
     app.quit()
   })
+
+  // If first time running and no API keys are set, open Settings automatically
+  if (!config.groqApiKey && !config.apiKey) {
+    setTimeout(openSettings, 800)
+  }
 })
 
 app.on('will-quit', () => {
